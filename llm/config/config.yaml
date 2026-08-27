@@ -1,0 +1,213 @@
+# LLM 推理引擎配置文件
+# Phase A: 基礎設施配置
+
+# =====================================
+# 硬體配置
+# =====================================
+hardware:
+  gpu: "NVIDIA GeForce RTX 5060 Ti"
+  vram_gb: 16
+  vram_budget:
+    model_loading_gb: 9.5
+    inference_buffer_gb: 3.5
+    system_other_gb: 2.5
+    total_gb: 15.5
+
+# =====================================
+# 本地推理引擎（第一層）
+# =====================================
+local_inference:
+  enabled: true
+  framework: "ollama"  # 或 "lm_studio"
+
+  # Ollama 配置
+  ollama:
+    base_url: "http://localhost:11434"
+    model_name: "qwen2.5-coder:14b-instruct-q4_K_M"
+    context_window: 8192
+
+    # 推理參數
+    inference:
+      temperature: 0.3
+      top_p: 0.9
+      num_predict: 1024
+      num_gpu: 1  # 使用 GPU 層數
+
+  # 性能目標
+  performance:
+    target_success_rate: 0.90  # 90% 成功率
+    max_latency_seconds: 10
+    avg_latency_seconds: 3
+    confidence_threshold: 0.85  # 信心度閾值
+
+# =====================================
+# 雲端兜底引擎（第二層）
+# =====================================
+cloud_fallback:
+  enabled: true
+  provider: "claude"
+
+  claude:
+    api_key: "${CLAUDE_API_KEY}"
+    model: "claude-opus-4"
+
+    # 調用觸發條件
+    triggers:
+      - name: "timeout"
+        condition: "inference_time > max_latency"
+      - name: "low_confidence"
+        condition: "confidence < 0.85"
+      - name: "sql_validation_failed"
+        condition: "generated_sql_invalid"
+      - name: "complex_query"
+        condition: "query_complexity > 0.7"
+
+    # 成本控制
+    cost_control:
+      max_monthly_budget_usd: 100
+      alert_threshold_usd: 50
+      request_rate_limit: 100  # 每小時最多 100 次
+
+# =====================================
+# Schema 配置
+# =====================================
+schema:
+  version: "1.0"
+  location: "./schema/schema-for-llm.md"
+
+  # 表白名單
+  allowed_tables:
+    - "fact_orders"
+    - "fact_production"
+    - "fact_finance"
+    - "dim_date"
+    - "dim_product"
+    - "dim_plant"
+    - "dim_department"
+
+  # 操作白名單
+  allowed_operations:
+    - "SELECT"
+    - "FROM"
+    - "WHERE"
+    - "GROUP BY"
+    - "ORDER BY"
+    - "JOIN"
+    - "LEFT JOIN"
+    - "INNER JOIN"
+    - "SUM"
+    - "AVG"
+    - "COUNT"
+    - "MAX"
+    - "MIN"
+    - "CASE"
+    - "WITH"
+
+  # 禁止操作
+  forbidden_operations:
+    - "INSERT"
+    - "UPDATE"
+    - "DELETE"
+    - "DROP"
+    - "ALTER"
+    - "TRUNCATE"
+    - "EXEC"
+    - "EXECUTE"
+
+# =====================================
+# 安全防護配置
+# =====================================
+security:
+  # 五層防護架構
+  validation_layers:
+    - "sql_syntax"      # 層 1: SQL 語法驗證
+    - "operation_check" # 層 2: 操作白名單
+    - "table_check"     # 層 3: 表白名單
+    - "rls"             # 層 4: 行級安全性
+    - "audit_log"       # 層 5: 審計日誌
+
+  # RLS 角色定義
+  roles:
+    admin:
+      description: "管理員，可見全部數據"
+      permissions: ["all_tables"]
+
+    sales_manager:
+      description: "銷售經理，只看自己通路數據"
+      permissions: ["fact_orders", "dim_product", "dim_date"]
+      filters:
+        - "channel = user.channel"
+
+    plant_manager:
+      description: "廠長，只看自己廠區數據"
+      permissions: ["fact_production", "dim_plant", "dim_date"]
+      filters:
+        - "plant_id = user.plant_id"
+
+  # 審計日誌
+  audit_log:
+    enabled: true
+    location: "./logs/audit.log"
+    retention_days: 90
+
+# =====================================
+# 數據庫連線
+# =====================================
+database:
+  type: "postgresql"
+  host: "localhost"
+  port: 5432
+  database: "oh_pets_company"
+  # 使用環境變數
+  user: "${DB_USER}"
+  password: "${DB_PASSWORD}"
+
+  # 連線池
+  pool:
+    min_size: 1
+    max_size: 5
+    timeout_seconds: 30
+
+# =====================================
+# 快取配置
+# =====================================
+cache:
+  enabled: true
+  backend: "redis"
+
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+    password: null
+
+  ttl:
+    default_seconds: 3600      # 1 小時
+    query_result: 3600
+    schema_cache: 86400        # 24 小時
+
+# =====================================
+# 日誌配置
+# =====================================
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  location: "./logs/"
+
+  handlers:
+    - type: "file"
+      filename: "llm_engine.log"
+      max_size_mb: 100
+      backup_count: 5
+
+    - type: "console"
+      format: "[%(levelname)s] %(message)s"
+
+# =====================================
+# 開發環境設置
+# =====================================
+environment: "development"  # development, production
+
+dev_settings:
+  debug_mode: true
+  log_all_queries: true
+  mock_ollama: false  # 若 true，會使用模擬推理器（測試用）

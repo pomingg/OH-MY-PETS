@@ -1,0 +1,19 @@
+PostgreSQL 16 Installation - Direct Command
+
+Step 1: Open PowerShell as Administrator
+  - Press Windows Key
+  - Type: PowerShell
+  - Right-click on Windows PowerShell
+  - Click "Run as Administrator"
+
+Step 2: Copy and paste this ENTIRE command into PowerShell and press Enter:
+
+---BEGIN---
+
+$url='https://get.enterprisedb.com/postgresql/postgresql-16.3-1-windows-x64.exe';$path='C:\Users\User\AppData\Local\Temp\postgresql-16-installer.exe';Write-Host 'Downloading PostgreSQL 16...';[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12;(New-Object System.Net.WebClient).DownloadFile($url,$path);Write-Host 'Download complete. Installing...';& $path --mode unattended --unattendedmodeui none --superpassword postgres123!@# --serviceaccount 'NT AUTHORITY\NetworkService' --servicename postgresql-16 --datadir 'C:\Program Files\PostgreSQL\16\data' --serverport 5432 --locale C --charset UTF8 --install_runtimes 1;Start-Sleep -Seconds 3;if(Test-Path 'C:\Program Files\PostgreSQL\16\bin\psql.exe'){Write-Host 'SUCCESS: PostgreSQL 16 installed!';Write-Host 'Host: localhost';Write-Host 'Port: 5432';Write-Host 'User: postgres';Write-Host 'Password: postgres123!@#'}else{Write-Host 'ERROR: Installation verification failed'}
+
+---END---
+
+Step 3: Wait for the installation to complete (2-5 minutes)
+
+Step 4: When done, tell me the result in Claude Code

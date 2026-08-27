@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-08-21T00:50:13.011439",
+  "total_records_before": 9911,
+  "total_records_after": 9908,
+  "tables_cleaned": [],
+  "cleaning_rules_applied": [],
+  "issues_found": [],
+  "issues_resolved": [
+    "Duplicate orders: 3 records removed",
+    "Missing ship dates: 235 records imputed",
+    "Format inconsistencies: 0 records normalized",
+    "Type errors: 9733 records corrected",
+    "Outliers: 36 detected and corrected",
+    "Date logic: 2407 records corrected",
+    "Amount calculation: 181 records recalculated"
+  ]
+}

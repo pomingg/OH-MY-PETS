@@ -1,0 +1,28 @@
+# LLM 推理引擎依賴
+
+# 核心依賴
+python-dotenv==1.0.0
+pyyaml==6.0.1
+requests==2.31.0
+
+# LLM 相關
+ollama==0.1.0
+anthropic==0.24.3
+
+# 資料庫
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+sqlparse==0.4.4
+
+# 快取
+redis==5.0.1
+
+# 工具
+pydantic==2.5.2
+
+# 開發工具
+pytest==7.4.3
+pytest-asyncio==0.23.2
+black==23.12.1
+flake8==6.1.0
+mypy==1.7.1

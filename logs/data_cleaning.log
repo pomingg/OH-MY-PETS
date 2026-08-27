@@ -1,0 +1,65 @@
+2026-08-21 00:50:13,011 - INFO - 
+2026-08-21 00:50:13,012 - INFO - ======================================================================
+2026-08-21 00:50:13,013 - INFO - Starting Data Cleaning Pipeline - Phase 2
+2026-08-21 00:50:13,013 - INFO - ======================================================================
+2026-08-21 00:50:13,013 - INFO - 
+2026-08-21 00:50:13,049 - INFO - Connected to PostgreSQL for data cleaning
+2026-08-21 00:50:13,049 - INFO - PHASE 2A: Data Assessment
+2026-08-21 00:50:13,050 - INFO - ----------------------------------------------------------------------
+2026-08-21 00:50:13,050 - INFO - Counting records before cleaning...
+2026-08-21 00:50:13,057 - INFO -   fact_orders: 9736 records
+2026-08-21 00:50:13,058 - INFO -   fact_sales_return: 0 records
+2026-08-21 00:50:13,059 - INFO -   fact_production: 0 records
+2026-08-21 00:50:13,061 - INFO -   fact_inventory: 0 records
+2026-08-21 00:50:13,063 - INFO -   dim_employee: 150 records
+2026-08-21 00:50:13,065 - INFO -   dim_dealer: 25 records
+2026-08-21 00:50:13,065 - INFO - 
+2026-08-21 00:50:13,066 - INFO - PHASE 2B: Data Cleaning
+2026-08-21 00:50:13,066 - INFO - ----------------------------------------------------------------------
+2026-08-21 00:50:13,067 - INFO - Cleaning duplicate orders...
+2026-08-21 00:50:13,081 - INFO -   Removed 3 duplicate orders
+2026-08-21 00:50:13,081 - INFO - Handling missing values...
+2026-08-21 00:50:13,139 - INFO -   Fixed 235 missing ship dates
+2026-08-21 00:50:13,140 - INFO - Fixing format inconsistencies...
+2026-08-21 00:50:13,141 - INFO -   Fixed 0 format inconsistencies
+2026-08-21 00:50:13,141 - INFO - Fixing type errors...
+2026-08-21 00:50:13,301 - INFO -   Fixed 9733 type errors
+2026-08-21 00:50:13,301 - INFO - Detecting and handling outliers...
+2026-08-21 00:50:13,309 - INFO -   Detected 36 outliers
+2026-08-21 00:50:13,309 - INFO -     Expected range: -1492159.74 - 1604195.16
+2026-08-21 00:50:13,312 - INFO - Validating foreign keys...
+2026-08-21 00:50:13,315 - INFO - Validating business rules...
+2026-08-21 00:50:13,345 - INFO -   Fixed 2407 date inconsistencies
+2026-08-21 00:50:13,351 - INFO -   Fixed 181 amount calculations
+2026-08-21 00:50:13,351 - INFO - 
+2026-08-21 00:50:13,352 - INFO - PHASE 2C: Post-Cleaning Validation
+2026-08-21 00:50:13,352 - INFO - ----------------------------------------------------------------------
+2026-08-21 00:50:13,353 - INFO - Counting records after cleaning...
+2026-08-21 00:50:13,354 - INFO -   fact_orders: 9733 records
+2026-08-21 00:50:13,355 - INFO -   fact_sales_return: 0 records
+2026-08-21 00:50:13,355 - INFO -   fact_production: 0 records
+2026-08-21 00:50:13,355 - INFO -   fact_inventory: 0 records
+2026-08-21 00:50:13,356 - INFO -   dim_employee: 150 records
+2026-08-21 00:50:13,356 - INFO -   dim_dealer: 25 records
+2026-08-21 00:50:13,356 - INFO - 
+2026-08-21 00:50:13,357 - INFO - Generating data quality report...
+2026-08-21 00:50:13,362 - INFO - Report saved to: D:\AI agents\OH-Pets company\logs\data_quality_report.json
+2026-08-21 00:50:13,362 - INFO - 
+2026-08-21 00:50:13,362 - INFO - ======================================================================
+2026-08-21 00:50:13,363 - INFO - DATA QUALITY REPORT SUMMARY
+2026-08-21 00:50:13,364 - INFO - ======================================================================
+2026-08-21 00:50:13,365 - INFO - Before Cleaning: 9,911 records
+2026-08-21 00:50:13,365 - INFO - After Cleaning:  9,908 records
+2026-08-21 00:50:13,365 - INFO - Records Removed: 3
+2026-08-21 00:50:13,366 - INFO - 
+2026-08-21 00:50:13,366 - INFO - Issues Resolved:
+2026-08-21 00:50:13,406 - INFO - ======================================================================
+2026-08-21 00:50:13,407 - INFO - 
+2026-08-21 00:50:13,407 - INFO - ======================================================================
+2026-08-21 00:50:13,417 - INFO - ======================================================================
+2026-08-21 00:50:13,417 - INFO - 
+2026-08-21 00:50:13,418 - INFO - Next Steps:
+2026-08-21 00:50:13,418 - INFO -   1. Review data_quality_report.json
+2026-08-21 00:50:13,419 - INFO -   2. Proceed with Phase 3: Daily incremental data generation
+2026-08-21 00:50:13,419 - INFO - ======================================================================
+2026-08-21 00:50:13,419 - INFO - Database connection closed
